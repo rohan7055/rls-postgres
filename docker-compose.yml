@@ -1,0 +1,43 @@
+version: '3.1'
+
+services:
+
+  database:
+        image: postgres:9.2
+        restart: always
+        environment: 
+          - POSTGRES_USER=postgres
+          - POSTGRES_PASSWORD=postgres
+        logging:
+          options:
+            max-size: 10m
+            max-file: "3"
+        ports:
+          - '5430:5432'
+        volumes:
+          - ./postgres-data:/var/lib/postgresql/data
+          # copy the sql script to create tables
+          - ./database/employees.sql:/docker-entrypoint-initdb.d/employees.sql
+          # # copy the sql script to fill tables
+          - ./database/load_departments.sql:/docker-entrypoint-initdb.d/load_departments.sql
+          - ./database/load_employees.sql:/docker-entrypoint-initdb.d/load_employees.sql
+          - ./database/load_dept_emp.sql:/docker-entrypoint-initdb.d/load_dept_emp.sql
+          - ./database/load_dept_manager.sql:/docker-entrypoint-initdb.d/load_dept_manager.sql
+          - ./database/load_titles.sql:/docker-entrypoint-initdb.d/load_titles.sql
+          - ./database/load_salaries.sql:/docker-entrypoint-initdb.d/load_salaries.sql
+
+
+          
+
+
+
+  adminer:
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=test@test.com
+      - PGADMIN_DEFAULT_PASSWORD=password
+    volumes:
+      - ./sql
+    ports:
+      - 8080:80

@@ -1,0 +1,58 @@
+1. Create user with 
+10001
+10002
+10003
+10004
+
+create user "10001" with encrypted password 'password';
+create user "10002" with encrypted password 'password';
+create user "10003" with encrypted password 'password';
+create user "10004" with encrypted password 'password';
+
+2. Created View with current user;
+-- View: public.current_employee
+
+-- DROP VIEW public.current_employee;
+
+CREATE OR REPLACE VIEW public.current_employee AS
+SELECT employees.emp_no, employees.birth_date, employees.first_name, employees.last_name, employees.gender, employees.hire_date FROM employees
+where emp_no=(Select current_user::integer);
+
+ALTER TABLE public.current_employee
+    OWNER TO postgres;
+
+3. Grant select permission
+
+grant select on public.current_employee
+ to public
+
+4. Check to see the current login user must access their data
+SELECT emp_no, birth_date, first_name, last_name, gender, hire_date
+	FROM public.current_employee;
+
+
+Group Authorization
+
+Create Users
+
+create user "110022" with encrypted password 'password';
+create user "110039" with encrypted password 'password';
+create user "110085" with encrypted password 'password';
+
+
+Create a Manager Group
+
+CREATE GROUP managersGrp WITH USER "110022", "110039", "110085";
+
+
+Create Users with sales managers.
+
+create user "111035" with encrypted password 'password';
+create user "111133" with encrypted password 'password';
+
+CREATE GROUP salesManagersGrp WITH USER "111035","111133";
+
+
+111035,111133
+
+
